@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Free Time Finder</title>
+    <link rel="stylesheet" href="Faculty_details.css">
+</head>
+<body>
+    <h1>Free Time Finder</h1>
+    <div class = "container">
+        <label for="department">Select Department:</label>
+        <select id="department" onchange="updateFaculty()">
+        <option value="cs">Computer Science</option>
+        <option value="math">Mathematics</option>
+        <option value="physics">Physics</option>
+        <option value="commerce">Commerce</option>
+        <option value="ds">Data Science</option>
+        </select>
+
+        <label for="faculty">Select Faculty:</label>
+        <select id="faculty" onchange="findFreeTime()">
+        </select>
+    </div>
+    <div class ="ft">
+        <h2>Free Time</h2>
+        <p id="freeTime"></p>
+        <h4>NOTE: Lunch Break is from 13:00PM - 14:00PM</h4>
+    </div>
+
+    <div class="clock" aria-label="06:02:31 PM">
+        <div class="clock__block clock__block--delay2" aria-hidden="true" data-time-group="">
+            <div class="clock__digit-group">
+                <div class="clock__digits" data-time="a">06</div>
+                <div class="clock__digits" data-time="b">06</div>
+            </div>
+        </div>
+        <div class="clock__colon"></div>
+        <div class="clock__block clock__block--delay1" aria-hidden="true" data-time-group="">
+            <div class="clock__digit-group">
+                <div class="clock__digits" data-time="a">02</div>
+                <div class="clock__digits" data-time="b">02</div>
+            </div>
+        </div>
+        <div class="clock__colon"></div>
+        <div class="clock__block clock__block--bounce" aria-hidden="true" data-time-group="">
+            <div class="clock__digit-group">
+                <div class="clock__digits" data-time="a">30</div>
+                <div class="clock__digits" data-time="b">31</div>
+            </div>
+        </div>
+        <div class="clock__block clock__block--delay2 clock__block--small" aria-hidden="true" data-time-group="">
+            <div class="clock__digit-group">
+                <div class="clock__digits" data-time="a">PM</div>
+                <div class="clock__digits" data-time="b">PM</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulating Faculty Schedules
+        const facultySchedules = {
+            "cs": [
+                {name: "Dr. John Doe", freeTime: "MON : 11:00AM - 12:00PM , FRI : 15:00PM - 16:00PM"},
+                {name: "Arjun Sam", freeTime: "TUE : 12:00PM - 13:00PM , THU : 14:00PM - 15:00PM"},
+                {name:"Bob Johnson", freeTime: "WED : 15:00PM - 16:00PM , SAT : 16:00PM - 16:30PM"},
+                {name:"Dr. Hemalatha", freeTime: "THU : 14:00PM - 15:00PM , FRI : 15:00PM - 16:00PM"},
+                {name:"Michael Lee", freeTime: "FRI : 10:00AM - 11:00AM , SAT : 12:00PM - 13:00PM"}
+                ],
+            "physics": [
+                {name: "Dr. Savitha", freeTime: "WED : 15:00PM - 16:00PM , SAT : 16:00PM - 16:30PM"},
+                {name: "Dr. Isabella Anderson", freeTime: "MON : 11:00AM - 12:00PM , FRI : 15:00PM - 16:00PM"},
+                {name:"Dr. Bharati Shankar", freeTime: "TUE : 12:00PM - 13:00PM , THU : 14:00PM - 15:00PM"},
+                {name:"Dr. Mia Hernandez", freeTime: "THU : 11:00AM - 12:00PM , SAT : 15:00PM - 16:00PM"},
+                {name:"Ethan Nguyen", freeTime: "THU : 14:00PM - 15:00PM , FRI : 15:00PM - 16:00PM"}
+                ],
+            "math":[
+               {name: "Sarah Adams", freeTime: "THU : 15:00PM - 16:00PM , FRI : 15:00PM - 16:00PM"},
+                {name: "Dr. Varmitha", freeTime: "WED : 10:00AM - 12:00PM , SAT : 15:00PM - 16:00PM"},
+                {name:"Olivia Clark", freeTime: "MON: 12:00PM - 13:00PM , THU : 14:00PM - 15:00PM"},
+                {name:"Sophia Martinez", freeTime: "THU : 14:00PM - 15:00PM , SAT : 15:00PM - 16:00PM"}
+                ],
+            "commerce":[
+                {name: "Dhruva Tara", freeTime: "FRI : 14:00PM - 15:00PM , SAT : 15:00PM - 16:00PM"},
+                {name: "Dr. Radha Krishnan", freeTime: "THU : 11:00AM - 12:00PM , FRI : 15:00PM - 16:00PM"},
+                {name:"Allen Peter", freeTime: "WED : 12:00PM - 13:00PM , THU : 15:00PM - 16:00PM"},
+                {name:"Ryan Hall", freeTime: "TUE : 11:00AM - 12:00PM , THU : 15:00PM - 16:00PM"},
+                {name:"Ella Wood", freeTime: "MON : 14:00PM - 15:00PM , TUE : 15:00PM - 16:00PM"},
+                ],
+            "ds":[
+                {name: "Dr. Yashwanth", freeTime: "MON : 10:00AM - 11:00AM , THU : 15:00PM - 16:00PM"},
+                {name: "Dr. Harper Murphy", freeTime: "WED : 14:00PM - 15:00PM , THU : 16:00PM - 16:30PM"},
+                {name:"Dr. Logan Rivera", freeTime: "FRI : 11:00AM - 12:00PM , SAT : 12:00PM - 13:00PM"},
+                {name:"Gayatri Devi", freeTime: " THU : 15:00PM - 16:00PM , FRI : 15:00PM - 16:00PM"},
+                {name:"Dr. Jackson", freeTime: "TUE : 12:00PM - 13:00PM , SAT : 11:00AM - 12:00PM"},
+                ],
+
+        };
+
+
+    const findFreeTime = () => {
+            const facultyElement = document.getElementById("faculty");
+            const selectedFaculty = facultyElement.value;
+
+            const department = document.getElementById("department").value;
+            const facultySchedulesForDepartment = facultySchedules[department];
+
+            let freeTime = "Free Time not available.";
+            const faculty = facultySchedulesForDepartment.find(faculty => faculty.name === selectedFaculty);
+            if (faculty) {
+                freeTime = faculty.freeTime;
+            }
+
+            document.getElementById("freeTime").textContent = freeTime;
+        };
+
+        const updateFaculty = () => {
+            const department = document.getElementById("department").value;
+            const facultySelect = document.getElementById("faculty");
+            facultySelect.innerHTML = "<option value=''>--Select--</option>";
+
+            if (!department) return;
+
+            const facultyList = facultySchedules[department];
+            facultyList.forEach(faculty => {
+                const option = document.createElement("option");
+                option.value = faculty.name;
+                option.textContent = faculty.name;
+                facultySelect.appendChild(option);
+            });
+
+            findFreeTime(); // Call findFreeTime to update the free time when the department changes
+        };
+
+        updateFaculty(); // Initialize faculty list on page load
+    </script>
+     <script>
+        window.addEventListener("DOMContentLoaded",() => {
+	const clock = new BouncyBlockClock(".clock");
+});
+
+class BouncyBlockClock {
+	constructor(qs) {
+		this.el = document.querySelector(qs);
+		this.time = { a: [], b: [] };
+		this.rollClass = "clock__block--bounce";
+		this.digitsTimeout = null;
+		this.rollTimeout = null;
+		this.mod = 0 * 60 * 1000;
+
+		this.loop();
+	}
+	animateDigits() {
+		const groups = this.el.querySelectorAll("[data-time-group]");
+
+		Array.from(groups).forEach((group,i) => {
+			const { a, b } = this.time;
+
+			if (a[i] !== b[i]) group.classList.add(this.rollClass);
+		});
+
+		clearTimeout(this.rollTimeout);
+		this.rollTimeout = setTimeout(this.removeAnimations.bind(this),900);
+	}
+	displayTime() {
+		// screen reader time
+		const timeDigits = [...this.time.b];
+		const ap = timeDigits.pop();
+
+		this.el.ariaLabel = `${timeDigits.join(":")} ${ap}`;
+
+		// displayed time
+		Object.keys(this.time).forEach(letter => {
+			const letterEls = this.el.querySelectorAll(`[data-time="${letter}"]`);
+
+			Array.from(letterEls).forEach((el,i) => {
+				el.textContent = this.time[letter][i];
+			});
+		});
+	}
+	loop() {
+		this.updateTime();
+		this.displayTime();
+		this.animateDigits();
+		this.tick();
+	}
+	removeAnimations() {
+		const groups = this.el.querySelectorAll("[data-time-group]");
+	
+		Array.from(groups).forEach(group => {
+			group.classList.remove(this.rollClass);
+		});
+	}
+	tick() {
+		clearTimeout(this.digitsTimeout);
+		this.digitsTimeout = setTimeout(this.loop.bind(this),1e3);	
+	}
+	updateTime() {
+		const rawDate = new Date();
+		const date = new Date(Math.ceil(rawDate.getTime() / 1e3) * 1e3 + this.mod);
+		let h = date.getHours();
+		const m = date.getMinutes();
+		const s = date.getSeconds();
+		const ap = h < 12 ? "AM" : "PM";
+
+		if (h === 0) h = 12;
+		if (h > 12) h -= 12;
+
+		this.time.a = [...this.time.b];
+		this.time.b = [
+			(h < 10 ? `0${h}` : `${h}`),
+			(m < 10 ? `0${m}` : `${m}`),
+			(s < 10 ? `0${s}` : `${s}`),
+			ap
+		];
+
+		if (!this.time.a.length) this.time.a = [...this.time.b];
+	}
+}
+    </script>
+
+
+
+</body>
+</html>

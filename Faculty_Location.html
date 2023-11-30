@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3p5YpK-WuFw9Q2Lmx8nAGHW4JkaGs0C0&callback=initMap">
+    </script>
+  
+
+    <title>Faculty Location</title>
+    <style>
+      
+        #map {
+            width: 90vw;
+            background-color: rgba(255, 255, 255, 0.8); 
+        }
+    
+        body {
+            font-family: Arial, sans-serif; 
+        }
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto 0; /* Adjust top margin for spacing */
+            text-align: center;
+        }
+        .search-container input {
+            width: 30%; /* Adjust the width as needed */
+            font-size: medium;
+            color:red;
+        }
+        .search-container select {
+            width: 30%; /* Adjust the width as needed */
+        }
+
+
+        h1{
+            color:red;
+            padding-left:5%;
+            text-align: center;
+        }
+        h3{
+          color:red;
+            padding-left:5%;
+            text-align: center;
+        }
+        .search-container input,
+        .search-container select {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+        }
+        .search-container button {
+            background-color:rgb(9, 77, 202);
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            width:20%;
+        }
+        #faculty-location{
+          font-size: 30;
+          font-family:sans-serif;
+          font-weight: bold;
+        }
+        button{ 
+            padding-left:5%;
+        }
+        .results-container {
+            margin-top: 2rem;
+        }
+        html, body {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #map-canvas {
+          height: 70vh;
+          width: 100vw;
+        }
+    #distance-info{
+      color:crimson;
+      font-size:30px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    #controls {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .label-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    
+    }
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+      text-align: left;
+      color: red;
+      font-size: 30px;
+      padding:5px;
+    }
+    select {
+      width: 30%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      color: teal;
+      font-size: 20px;
+    }
+    button {
+      background-color: #281aeb;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: rgb(79, 90, 247);
+    }
+
+    footer {
+    /*background-color: #333;*/
+      color: #f5f2f2;
+      text-align: center;
+      padding: 1px;
+      background-color: rgb(7, 7, 7);
+    }
+    </style>
+</head>
+<body>
+    <h1>Find Faculty Location</h1>
+    <div class="search-container">
+        <select id="department">
+            <option value="">Select Department</option>
+            <option value="cs">Computer Science</option>
+            <option value="math">Mathematics</option>
+            <option value="physics">Physics</option>
+            <option value="commerce">Commerce</option>
+            <option value="ds">Data Science</option>
+        </select>
+        <select id="faculty-list" multiple></select>
+        <input type="text" id="faculty-location" placeholder="Faculty Location" readonly>
+        
+    </div>
+    <h3>Note: Select the Building from faculty's location and then choose the bulding in the dropdown list.</h3>
+    <div class="results-container">
+    </div>
+    <div id='map'></div>
+    <div id="controls">
+      <div class="label-container">
+      <label for="source">Source(A): </label>
+      <select id="source">
+        <option value="current">Current Location</option>
+        <option value="12.936211443787872, 77.60595461773138">Christ Auditorium</option>
+        <option value="12.936659893193292, 77.6025299832662">Dharmaram College</option>
+        <option value="12.93538246600297, 77.60587614874143">Christ PU College</option>
+        <option value="12.934425690736493, 77.6061841284973">Central Block</option>
+        <option value="12.93402924948084, 77.60654450300343">Block 1</option>
+        <option value="12.933504106289554, 77.60652609299518">Christ University Library</option>
+        <option value="12.933101890286142, 77.60634210413986">Block 2</option>
+        <option value="12.932140274700359, 77.60640972635805">Block 3</option>
+        <option value="12.932077157089614, 77.60636696549481">Mingos(Food Corner)</option>
+        <option value="12.931672222981366, 77.60613730595797">Jonas Hall</option>
+        <option value="12.931261522373978, 77.60582247610725">R&D Block</option>
+        <option value="12.93198536207434, 77.60597262572266">Block 4</option>
+        <option value="12.932323677735832, 77.60600007242454">St Kuriakose Elias Chavara Hall</option>
+        <option value="12.933154516112934, 77.60585315182882">Christ University Ground</option>
+        <option value="12.931244213137102, 77.60404974180547">CBSE School</option>
+        <option value="12.93388885329588, 77.60417312479625">Car Parking Space</option>  
+      </select>
+  
+      <label for="destination">Destination(B): </label>
+      <select id="destination">
+        <option value="12.936211443787872, 77.60595461773138">Christ Auditorium</option>
+        <option value="12.936659893193292, 77.6025299832662">Dharmaram College</option>
+        <option value="12.93538246600297, 77.60587614874143">Christ PU College</option>
+        <option value="12.934425690736493, 77.6061841284973">Central Block</option>
+        <option value="12.93402924948084, 77.60654450300343">Block 1</option>
+        <option value="12.933504106289554, 77.60652609299518">Christ University Library</option>
+        <option value="12.933101890286142, 77.60634210413986">Block 2</option>
+        <option value="12.932140274700359, 77.60640972635805">Block 3</option>
+        <option value="12.932077157089614, 77.60636696549481">Mingos(Food Corner)</option>
+        <option value="12.931672222981366, 77.60613730595797">Jonas Hall</option>
+        <option value="12.931261522373978, 77.60582247610725">R&D Block</option>
+        <option value="12.93198536207434, 77.60597262572266">Block 4</option>
+        <option value="12.932323677735832, 77.60600007242454">St Kuriakose Elias Chavara Hall</option>
+        <option value="12.933154516112934, 77.60585315182882">Christ University Ground</option>
+        <option value="12.931244213137102, 77.60404974180547">CBSE School</option>
+        <option value="12.93388885329588, 77.60417312479625">Car Parking Space</option>  
+      </select>
+      </div>
+      <button onclick="searchRoute()">Search</button>
+      <p id="distance-info"></p>
+    </div>
+  
+    <div id="map-canvas"></div>
+    <script>
+    
+      // Sample faculty data (you can replace this with your actual data)
+const facultyData = {
+    cs: ['Dr. John Doe', 'Arjun Sam', 'Bob Johnson', 'Dr. Hemalatha', 'Michael Lee'],
+    math: ['Sarah Adams', 'Dr. Varmitha', 'Olivia Clark', 'Dr. Prathiba Sundar', 'Sophia Martinez'],
+    physics: ['Dr. Savitha', 'Dr. Isabella Anderson', 'Dr. Bharati Shankar', 'Dr. Mia Hernandez', 'Ethan Nguyen'],
+    commerce: ['Dhruva Tara,', 'Dr. Radha Krishnan', 'Allen Peter', 'Ryan Hall', 'Ella Wood'],
+    ds: ['Dr. Yashwanth', 'Dr. Harper Murphy', 'Dr. Logan Rivera', 'Gayatri Devi', 'Dr. Jackson']
+};
+
+const locations = {
+    cs: ['Room no.516, 5th floor, Central Block',
+     'Room no.517, 5th floor, Central Block',
+     'Room no.518, 5th floor, Central Block', 
+     'Room no.619, 6th floor, Central Block', 
+     'Room no.621, 6th floor, Central Block'
+    ],
+    math: ['Room no.103, 1st floor, Block 1', 
+    'Room no.106, 1st floor, Block 1', 
+    'Room no.006, Ground floor, Block 1', 
+    'Room no.005, Ground floor, Block 1', 
+    'Room no.004, Ground floor, Block 1'
+    ],
+    physics: ['Room no.108, 1st floor, Block 2', 
+    'Room no.203, 2nd floor, Block 2', 
+    'Room no.308, 3rd floor, Block 2', 
+    'Room no.309, 3rd floor, Block 2', 
+    'Room no.307, 3rd floor, Block 2'
+    ],
+    commerce: ['Room no.513, 5th floor, Block 4', 
+    'Room no.511, 5th floor, Block 4', 
+    'Room no.510, 5th floor, Block 4', 
+    'Room no.419, 4th floor, Block 4', 
+    'Room no.418, 4th floor, Block 4'
+    ],
+    ds: ['Room no.408, 4th floor, R&D Block', 
+    'Room no.409, 4th floor, R&D Block', 
+    'Room no.510, Cabin-02, 5th floor, R&D Block', 
+    'Room no.510, Cabin-05, 5th floor, R&D Block', 
+    'Room no.510, Cabin-04, 5th floor, R&D Block'
+  ]
+};
+
+// Function to populate faculty list based on selected department
+function populateFacultyList() {
+    const department = document.getElementById('department').value;
+    const facultyList = document.getElementById('faculty-list');
+    facultyList.innerHTML = '';
+
+    if (department !== '') {
+        const faculties = facultyData[department];
+        faculties.forEach(faculty => {
+            const option = document.createElement('option');
+            option.text = faculty;
+            facultyList.add(option);
+        });
+    }
+}
+
+// Function to update faculty location based on selected faculty
+function updateFacultyLocation() {
+    const selectedFaculty = document.getElementById('faculty-list').value;
+    const department = document.getElementById('department').value;
+    const facultyLocation = document.getElementById('faculty-location');
+
+    if (selectedFaculty !== '') {
+        const faculties = facultyData[department];
+        const facultyIndex = faculties.indexOf(selectedFaculty);
+
+        if (facultyIndex !== -1) {
+            const location = locations[department][facultyIndex];
+            facultyLocation.value = location;
+        }
+    } else {
+        facultyLocation.value = '';
+    }
+}
+
+// Event listeners
+document.getElementById('department').addEventListener('change', populateFacultyList);
+document.getElementById('faculty-list').addEventListener('change', updateFacultyLocation);
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3p5YpK-WuFw9Q2Lmx8nAGHW4JkaGs0C0&callback=initMap&libraries=places"></script>
+  
+    <script>
+      var directionsService;
+      var directionsDisplay;
+      var map;
+  
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map-canvas'), {
+          zoom: 7,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+  
+        directionsService = new google.maps.DirectionsService();
+        directionsDisplay = new google.maps.DirectionsRenderer({
+          map: map,
+          polylineOptions: {
+            strokeOpacity: 0,
+            strokeColor: 'blue',
+            icons: [{
+              icon: {
+                path: 'M 0,-1 0,1',
+                strokeOpacity: 1,
+                scale: 4
+              },
+              offset: '0',
+              repeat: '20px'
+            }]
+          }
+        });
+  
+        // Initialize the map with a default route (from current location to a predefined destination)
+        getCurrentLocationAndInitializeMap();
+      }
+  
+      function getCurrentLocationAndInitializeMap() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              var currentLocation = position.coords.latitude + ',' + position.coords.longitude;
+              document.getElementById('source').value = 'current';
+              calculateAndDisplayRoute(currentLocation, '12.936211443787872, 77.60595461773138'); // Change the destination as needed
+            },
+            function (error) {
+              console.error('Error getting current location:', error);
+            }
+          );
+        } else {
+          console.error('Geolocation is not supported by this browser.');
+        }
+      }
+  
+      function calculateAndDisplayRoute(source, destination) {
+        var sourceLatLng;
+        if (source === 'current') {
+          // If source is set to 'current', use the current location
+          getCurrentLocationAndInitializeMap();
+          return;
+        } else {
+          sourceLatLng = new google.maps.LatLng(...source.split(','));
+        }
+  
+        var destinationLatLng = new google.maps.LatLng(...destination.split(','));
+  
+        directionsService.route({
+          origin: sourceLatLng,
+          destination: destinationLatLng,
+          travelMode: google.maps.TravelMode.WALKING
+        }, function(response, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+            // Extract distance information and display it
+            var distance = response.routes[0].legs[0].distance.text;
+            document.getElementById('distance-info').textContent = 'Distance: ' + distance;
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+  
+        map.setCenter(sourceLatLng);
+  
+        var markerA = new google.maps.Marker({
+          position: sourceLatLng,
+          title: "Source",
+          label: "A",
+          map: map
+        });
+  
+        var markerB = new google.maps.Marker({
+          position: destinationLatLng,
+          title: "Destination",
+          label: "B",
+          map: map
+        });
+      }
+  
+      function searchRoute() {
+        var source = document.getElementById('source').value;
+        var destination = document.getElementById('destination').value;
+        calculateAndDisplayRoute(source, destination);
+      }
+  
+      // Ensure that the initMap function is called after the script is loaded
+      google.maps.event.addDomListener(window, 'load', initMap);
+    </script>
+    <footer>
+      <p>&copy; 2023 Christ University</p>
+    </footer>
+    
+    
+  </body>
+</html>

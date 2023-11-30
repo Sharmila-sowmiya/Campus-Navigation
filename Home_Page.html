@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="Home_Page.css">
+</head>
+<body>
+   
+    <div class="wrapper">
+        <div class="sidebar">
+            <!--LOGO-->
+            <div class="profile">
+               <img src="Images/Christ Logo.jpg" alt="Christ LOGO">
+               <h4>Christ (Deemed to be University)</h4>
+            </div>
+            <ul>
+                 <li>
+                    <a href="Home_Page.html" class="active">
+                        <span class="icon"><i class="fas fa-home"></i></span>
+                        <span class="item">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="Navigate.HTML">
+                        <span class="icon"><i class="fas fa-map-pin"></i></span>
+                        <span class="item">Navigate</span>
+                        
+                    </a>
+                </li>
+                <li>
+                    <a href="Faculty_Location.html">
+                        <span class="icon"><i class="fas fa-search"></i></span>
+                        <span class="item">Find My Teacher</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="Faculty_Details.html">
+                        <span class="icon"><i class="fas fa-street-view"></i></span>
+                        <span class="item"> Faculty Details</span>
+                    </a>
+                </li>
+                
+                <!--<li>
+                    <a href="#">
+                        <span class="icon"><i class="fas fa-user-shield"></i></span>
+                        <span class="item"> Other Campuses</span>
+                    </a>
+                </li>-->
+            </ul>
+        </div>
+        <div class="section">
+            <div class="top_navbar">
+                <div class="hamburger">
+                    <a href="#">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1>Welcome To Christ Deemed To Be University!</h1>
+    <h4>Take a look at the campus by our navigating partner...</h4>
+    <img src="Images/Christ College.jpg" alt="College" class="center">
+    
+    <p>"CHRIST (Deemed to be University) was established as 'Christ College' in 1969.
+         It undertook path-breaking initiatives in Indian higher education with the introduction
+          of innovative and modern curricula, insistence on academic discipline, imparting of 
+          Holistic Education and adoption of global higher education practices with the support of
+           creative and dedicated staff."</p>
+    <p>  The University Grants Commission (UGC) of India conferred Autonomy to Christ College in 2004 and identified 
+        it as an Institution with Potential for Excellence in 2006. In 2008 under Section 3 of the UGC Act, 
+        1956, the Ministry of Human Resource Development of the Government of India, declared the institution
+         a Deemed to be University, in the name and style of Christ University. One of the first institutions 
+         in India to be accredited in 1998 by the National Assessment and Accreditation Council (NAAC),
+          Government of India, and subsequently in 2004, 2016, 2022 CHRIST (Deemed to be University) is 
+          currently accredited with 'A+'' Grade. The University is ranked among top 100 universities in 
+        India at 67 in the NIRF India Ranking 2023 of Ministry of Education, Government of India.</p>
+    
+  <script>
+       var hamburger = document.querySelector(".hamburger");
+	hamburger.addEventListener("click", function(){
+		document.querySelector("body").classList.toggle("active");
+	})
+  </script>
+</body>
+</html>
